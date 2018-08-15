@@ -48,23 +48,10 @@ class Staff(Base):
     name = Column(String)
     branch = Column(String)
     age = Column(String)
-    '''
-    department_ref = relationship(
-        DepartmentRef,
-        backref=backref('staff',
-                        uselist=True,
-                        cascade='delete,all'))
-    '''
 
-''' 
-    # リレーション定義
-    #department_ref = relationship("DepartmentRef", backref="department_ref")
-    
-    department_id = Column(Integer, ForeignKey('department.id'))
     department = relationship(
-        Department,
-        backref=backref('employees',
-                        uselist=True,
-                        cascade='delete,all'))
-'''
+        DepartmentRef,
+        uselist=False,
+        backref='staff'
+    )
      

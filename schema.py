@@ -19,6 +19,21 @@ from models import db_session, Staff as StaffModel, DepartmentRef as DepartmentR
   }
 }
 {
+  allStaff {
+    edges {
+      node {
+        id
+        branch
+        name
+        age
+        department {
+          departmentName
+        }
+      }
+    }
+  }
+}
+{
   allDepartment {
     edges {
       node {
@@ -40,16 +55,13 @@ class DepartmentRef(SQLAlchemyObjectType):
         model = DepartmentRefModel
         interfaces = (relay.Node, )
 
-"""
 class StaffConnection(relay.Connection):
     class Meta:
         node = Staff
-"""
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    all_staff = SQLAlchemyConnectionField(Staff)
+    all_staff = SQLAlchemyConnectionField(StaffConnection)
     all_department = SQLAlchemyConnectionField(DepartmentRef)
-    #all_staff_departments = SQLAlchemyConnectionField(StaffConnection)
 
 schema = graphene.Schema(query=Query)
