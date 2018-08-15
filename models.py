@@ -6,12 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 import pymysql
 pymysql.install_as_MySQLdb()
 
-'''
-engine = create_engine('sqlite:///database.sqlite3', convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
-'''
 DATABASE = 'mysql://%s:%s@%s/%s?charset=ujis' % (
     "root",
     "",
@@ -42,25 +36,30 @@ Base.query = db_session.query_property()
 '''
 テーブル定義
 '''
+class DepartmentRef(Base):
+    __tablename__ = 'department_ref'
+    id = Column(Integer, primary_key=True)
+    department_name = Column(String)
+    staff_id = Column(Integer,ForeignKey('staff.id'))
+
 class Staff(Base):
     __tablename__ = 'staff'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     branch = Column(String)
     age = Column(String)
+    '''
+    department_ref = relationship(
+        DepartmentRef,
+        backref=backref('staff',
+                        uselist=True,
+                        cascade='delete,all'))
+    '''
 
-'''
-class Department(Base):
-    __tablename__ = 'department'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-
-
-class Employee(Base):
-    __tablename__ = 'employee'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    hired_on = Column(DateTime, default=func.now())
+''' 
+    # リレーション定義
+    #department_ref = relationship("DepartmentRef", backref="department_ref")
+    
     department_id = Column(Integer, ForeignKey('department.id'))
     department = relationship(
         Department,
@@ -68,3 +67,4 @@ class Employee(Base):
                         uselist=True,
                         cascade='delete,all'))
 '''
+     
